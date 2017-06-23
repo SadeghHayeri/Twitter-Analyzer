@@ -3,3 +3,6 @@
 
 # Secrets python file
 /secrets.py
+
+# jupyter checkpints
+/.ipynb_checkpoints
