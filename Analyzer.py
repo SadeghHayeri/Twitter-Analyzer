@@ -51,7 +51,7 @@ def get_friends(api, username, limit):
                 raise e
 
 def get_tweets(api, username, limit):
-    if not os.path.isfile("./downloaded/" + username + ".db.ny"):
+    if not os.path.isfile("./downloaded/" + username + ".db.npy"):
         itr = tweepy.Cursor(api.user_timeline, screen_name=username).items(limit)
         res = np.array([])
         print( username )
