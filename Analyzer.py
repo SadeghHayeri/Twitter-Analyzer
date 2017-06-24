@@ -11,10 +11,11 @@ api = tweepy.API(auth)
 def getUserFavorites(api, username, limit):
     res = np.array([])
     itr = tweepy.Cursor(api.favorites, user=username).items(limit)
-
+    print( username )
+    
     while True:
         try:
-            for favorite in tqdm(itr, unit="tweet", desc=username):
+            for favorite in itr:
                 res = np.append(res, favorite)
 
             np.save( res, "./downloaded/"+username+".db")
@@ -29,7 +30,7 @@ def getUserFavorites(api, username, limit):
 
 def getAllFavorites(api, usersList, limit):
     res = {}
-    for username in tqdm(usersList):
+    for username in usersList:
         res[username] = getUserFavorites(api, username, limit)
     return res
 
@@ -50,4 +51,4 @@ def get_friends(api, username, limit):
 
 usersList = ['sadeghhayeri']
 # data = getAllFavorites(api,usersList, 1000)
-get_friends(api, "sadeghhayeri", 100)
+get_friends(api, "sadeghhayeri", 10000)
