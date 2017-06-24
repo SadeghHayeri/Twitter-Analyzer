@@ -12,7 +12,7 @@ def getUserFavorites(api, username, limit):
     res = np.array([])
     itr = tweepy.Cursor(api.favorites, user=username).items(limit)
     print( username )
-    
+
     while True:
         try:
             for favorite in itr:
@@ -35,12 +35,12 @@ def getAllFavorites(api, usersList, limit):
     return res
 
 def get_friends(api, username, limit):
-    itr = tweepy.Cursor(api.friends, screen_name=username).items(limit)
+    itr = tweepy.Cursor(api.friends, screen_name=username).items()
 
     while True:
         try:
             for friend in itr:
-                getUserFavorites(api, friend._json['screen_name'], 10000)
+                get_tweets(api, friend._json['screen_name'], limit)
         except tweepy.TweepError as e:
             if e.reason == "Twitter error response: status code = 429":
                 print("Rate Limit !")
@@ -49,6 +49,24 @@ def get_friends(api, username, limit):
             else:
                 raise e
 
-usersList = ['sadeghhayeri']
+def get_tweets(api, username, limit):
+    itr = tweepy.Cursor(api.user_timeline, screen_name=username).items(limit)
+    res = np.array([])
+    print( username )
+
+    while True:
+        try:
+            for status in tqdm(itr):
+                res = np.append(res, status)
+            np.save("./downloaded/"+username+".db", res)
+            return res
+        except tweepy.TweepError as e:
+            if e.reason == "Twitter error response: status code = 429":
+                print("Rate Limit !")
+                time.sleep(15 * 60)
+                print("Hi !")
+            else:
+                raise e
+
 # data = getAllFavorites(api,usersList, 1000)
-get_friends(api, "sadeghhayeri", 10000)
+get_friends(api, "sadeghhayeri", 5000)
