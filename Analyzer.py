@@ -77,5 +77,10 @@ def get_tweets(api, username, limit):
 while True:
     try:
         get_friends(api, "sadeghhayeri", 5000)
+    except tweepy.TweepError as e:
+        print(e)
+        print("start over!")
+    except (KeyboardInterrupt, SystemExit):
+        raise
     except:
         print("some errors! start over!")
